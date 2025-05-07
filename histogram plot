@@ -1,43 +1,50 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-data = {'Student Name': ['Alice', 'Bob', 'Charlie', 'David', 'Eve'],
-        'Marks': [12, 9, 14, 7, 11]}
 
-df = pd.DataFrame(data)
-df.to_excel("students_data.xlsx", index=False)
-file_path = "students_data.xlsx"  # Replace with the actual file name
+# Load Excel file
+file_path = 'Marks_secC.xlsx'  # Change path if needed
 df = pd.read_excel(file_path)
+
+# Rename columns for clarity
+df.columns = ['Roll No', 'Name', 'Email', 'Batch', 'Timestamp', 'Status', 'Marks', 'Valid']
+
+# Drop rows without marks
+df = df.dropna(subset=['Marks'])
 
 # Calculate percentage
 df['Percentage'] = (df['Marks'] / 15) * 100
 
 # Categorize students
-greater_75 = df[df['Percentage'] > 75]
+greater_than_75 = df[df['Percentage'] > 75]
 between_60_75 = df[(df['Percentage'] >= 60) & (df['Percentage'] <= 75)]
-less_60 = df[df['Percentage'] < 60]
+less_than_60 = df[df['Percentage'] < 60]
 
-# Print categorized students
-print("\nStudents with > 75% marks:")
-print(greater_75)
+# Print categorized results
+print("Students with >75%:")
+print(greater_than_75[['Name', 'Percentage']], '\n')
 
-print("\nStudents with 60% to 75% marks:")
-print(between_60_75)
+print("Students with 60%-75%:")
+print(between_60_75[['Name', 'Percentage']], '\n')
 
-print("\nStudents with < 60% marks:")
-print(less_60)
+print("Students with <60%:")
+print(less_than_60[['Name', 'Percentage']], '\n')
 
-# Plot Histogram
-plt.figure(figsize=(7, 5))
+# Histogram Plot
+plt.figure(figsize=(8, 5))
 plt.hist(df['Percentage'], bins=range(0, 101, 5), edgecolor='black', color='blue')
 plt.xlabel('Percentage')
 plt.ylabel('Number of Students')
 plt.title('Histogram Plot')
+plt.grid(True, linestyle='--', alpha=0.5)
+plt.tight_layout()
 plt.show()
 
-# Plot Scatter Plot
-plt.figure(figsize=(7, 5))
-plt.scatter(df.index, df['Percentage'], color='blue')
+# Scatter Plot
+plt.figure(figsize=(10, 5))
+plt.scatter(range(len(df)), df['Percentage'], color='blue', edgecolors='black')
 plt.xlabel('Students')
 plt.ylabel('Percentage')
 plt.title('Scatter Plot')
+plt.grid(True, linestyle='--', alpha=0.5)
+plt.tight_layout()
 plt.show()
